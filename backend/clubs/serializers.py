@@ -40,9 +40,11 @@ class ClubSerializer(serializers.ModelSerializer):
         password = validated_data.pop('sender_password', None)
         club = super().update(instance, validated_data)
         if password is not None:
-            if password == "" and not club.sender_email:
-                club.set_sender_password(None)
+            if password == "":
+                if not club.sender_email:
+                    club.set_sender_password(None)
+                    club.save()
             else:
                 club.set_sender_password(password)
-            club.save()
+                club.save()
         return club
