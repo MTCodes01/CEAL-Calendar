@@ -133,18 +133,22 @@ def dispatch_notifications(self):
                 user.save(update_fields=['last_notification_sent_at'])
                 continue
 
-            # Pre-fetch all clubs to a dict by name for cancelled events mapping
-            all_clubs = {c.name: c for c in Club.objects.all()}
+            # Pre-fetch all clubs for fast lookups
+            all_clubs_by_id = {c.id: c for c in Club.objects.all()}
+            all_clubs_by_name = {c.name: c for c in all_clubs_by_id.values()}
             
-            # Group by Club object (or None for unknown clubs)
+            # Group by sender Club object (or None for unknown clubs)
             club_grouped = defaultdict(lambda: {'events': [], 'cancelled': []})
             
             for event in new_events:
-                club_grouped[event.club]['events'].append(event)
+                club = all_clubs_by_id.get(event.club_id)
+                sender_club = club.parent if club and club.parent else club
+                club_grouped[sender_club]['events'].append(event)
                 
             for cancelled_event in cancelled_events:
-                club = all_clubs.get(cancelled_event.club_name)
-                club_grouped[club]['cancelled'].append(cancelled_event)
+                club = all_clubs_by_name.get(cancelled_event.club_name)
+                sender_club = club.parent if club and club.parent else club
+                club_grouped[sender_club]['cancelled'].append(cancelled_event)
 
             logger.info(
                 "Sending %d new/updated event(s) and %d cancelled event(s) to user %s across %d club(s).",
