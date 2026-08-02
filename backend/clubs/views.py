@@ -25,4 +25,23 @@ class ClubManagementViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # Super admin only
-        serializer.save()
+        club = serializer.save()
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=self.request.user,
+            action='CLUB_CREATE',
+            entity_type='Club',
+            entity_id=str(club.id),
+            details={'name': club.name, 'color': club.color}
+        )
+
+    def perform_update(self, serializer):
+        club = serializer.save()
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=self.request.user,
+            action='CLUB_UPDATE',
+            entity_type='Club',
+            entity_id=str(club.id),
+            details={'name': club.name, 'color': club.color}
+        )

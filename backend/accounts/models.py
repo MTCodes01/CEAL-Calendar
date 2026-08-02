@@ -81,3 +81,34 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.email
+
+
+class ActivityLog(models.Model):
+    """
+    Log of administrative and event actions.
+    """
+    ACTION_CHOICES = [
+        ('EVENT_CREATE', 'Event Created'),
+        ('EVENT_UPDATE', 'Event Updated'),
+        ('EVENT_DELETE', 'Event Deleted'),
+        ('CLUB_UPDATE', 'Club Settings Updated'),
+        ('CLUB_CREATE', 'Club Created'),
+        ('USER_ACCESS', 'User Access Updated'),
+    ]
+    actor = models.ForeignKey(
+        'accounts.User', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+    )
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    entity_type = models.CharField(max_length=50, help_text="e.g. 'Event', 'Club', 'User'")
+    entity_id = models.CharField(max_length=50)
+    details = models.JSONField(default=dict, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-timestamp']
+        
+    def __str__(self):
+        return f"{self.actor} - {self.action} - {self.entity_type} ({self.entity_id})"

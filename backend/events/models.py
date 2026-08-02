@@ -23,6 +23,7 @@ class Event(models.Model):
     # Relations
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='events')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_events')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_events')
     collaborating_clubs = models.ManyToManyField(
         Club,
         blank=True,

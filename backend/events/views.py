@@ -134,7 +134,8 @@ class EventViewSet(viewsets.ModelViewSet):
 
         event = serializer.save(
             club=club,
-            created_by=user
+            created_by=user,
+            updated_by=user
         )
 
         # Set collaborating clubs
@@ -142,6 +143,16 @@ class EventViewSet(viewsets.ModelViewSet):
             from clubs.models import Club as ClubModel
             collab_clubs = ClubModel.objects.filter(pk__in=collaborating_club_ids)
             event.collaborating_clubs.set(collab_clubs)
+
+        # Log to ActivityLog
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=user,
+            action='EVENT_CREATE',
+            entity_type='Event',
+            entity_id=str(event.id),
+            details={'title': event.title, 'club': club.name}
+        )
 
         logger.info("Event created: '%s' (id=%s) by %s in club '%s'", event.title, event.id, user.email, club.name)
     
@@ -178,13 +189,27 @@ class EventViewSet(viewsets.ModelViewSet):
             else:
                 raise PermissionDenied("You must be a member of a club to edit events.")
 
-        updated_event = serializer.save(club=event.club, created_by=event.created_by)
+        updated_event = serializer.save(
+            club=event.club, 
+            created_by=event.created_by,
+            updated_by=user
+        )
 
         # Update collaborating clubs whenever the field is present in the payload
         if collaborating_club_ids is not None:
             from clubs.models import Club as ClubModel
             collab_clubs = ClubModel.objects.filter(pk__in=collaborating_club_ids)
             updated_event.collaborating_clubs.set(collab_clubs)
+
+        # Log to ActivityLog
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=user,
+            action='EVENT_UPDATE',
+            entity_type='Event',
+            entity_id=str(updated_event.id),
+            details={'title': updated_event.title, 'club': updated_event.club.name}
+        )
 
         logger.info("Event updated: '%s' (id=%s) by %s", event.title, event.id, user.email)
 
@@ -228,5 +253,15 @@ class EventViewSet(viewsets.ModelViewSet):
                 event_created_at=instance.created_at
             )
             
+        # Log to ActivityLog
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=user,
+            action='EVENT_DELETE',
+            entity_type='Event',
+            entity_id=str(instance.id),
+            details={'title': instance.title, 'club': instance.club.name}
+        )
+
         logger.info("Event deleted: '%s' (id=%s) by %s", instance.title, instance.id, user.email)
         instance.delete()

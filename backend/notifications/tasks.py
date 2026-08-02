@@ -106,7 +106,7 @@ def dispatch_notifications(self):
                     Q(updated_at__gt=effective_start_utc, updated_at__lte=now_utc)
                 )
                 .filter(end__gte=now_utc)
-                .select_related('club', 'created_by')
+                .select_related('club', 'created_by', 'updated_by')
                 .order_by('start')
             )
             
@@ -173,6 +173,11 @@ def send_digest_email(user, events, cancelled_events=None):
             if hasattr(event, 'created_at') and hasattr(event, 'updated_at') and event.created_at and event.updated_at:
                 is_updated = abs((event.updated_at - event.created_at).total_seconds()) > 2
 
+            if is_updated and hasattr(event, 'updated_by') and event.updated_by:
+                author_name = f"{event.updated_by.first_name} {event.updated_by.last_name}".strip() or event.updated_by.username
+            else:
+                author_name = f"{event.created_by.first_name} {event.created_by.last_name}".strip() or event.created_by.username
+
             event_data = {
                 'title': event.title,
                 'club_name': event.club.name,
@@ -180,7 +185,7 @@ def send_digest_email(user, events, cancelled_events=None):
                 'datetime': format_event_datetime(event.start, user.timezone, user.time_format),
                 'end_datetime': format_event_datetime(event.end, user.timezone, user.time_format),
                 'location': event.location,
-                'created_by': f"{event.created_by.first_name} {event.created_by.last_name}".strip() or event.created_by.username,
+                'author': author_name,
             }
             if is_updated:
                 updated_events.append(event_data)

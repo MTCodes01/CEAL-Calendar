@@ -323,6 +323,22 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
             return AdminUserUpdateSerializer
         return UserSerializer
 
+    def perform_update(self, serializer):
+        user = serializer.save()
+        from accounts.models import ActivityLog
+        ActivityLog.objects.create(
+            actor=self.request.user,
+            action='USER_ACCESS',
+            entity_type='User',
+            entity_id=str(user.id),
+            details={
+                'email': user.email,
+                'club': user.club.name if user.club else None,
+                'sub_club': user.sub_club.name if user.sub_club else None,
+                'extra_clubs': [c.name for c in user.extra_clubs.all()]
+            }
+        )
+
     def perform_destroy(self, instance):
         logger.warning("Admin %s deleted user %s (id=%s)", self.request.user.email, instance.email, instance.id)
         instance.delete()
