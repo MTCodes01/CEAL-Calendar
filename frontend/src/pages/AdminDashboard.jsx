@@ -104,9 +104,15 @@ const AdminDashboard = () => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     const fullName = `${u.first_name || ''} ${u.last_name || ''}`.toLowerCase();
+    
+    const hasMainClub = u.club && u.club.name && u.club.name.toLowerCase().includes(query);
+    const hasSubClub = u.sub_club && u.sub_club.name && u.sub_club.name.toLowerCase().includes(query);
+    const hasExtraClub = u.extra_clubs && u.extra_clubs.some(c => c.name && c.name.toLowerCase().includes(query));
+
     return fullName.includes(query) || 
            (u.email && u.email.toLowerCase().includes(query)) ||
-           (u.username && u.username.toLowerCase().includes(query));
+           (u.username && u.username.toLowerCase().includes(query)) ||
+           hasMainClub || hasSubClub || hasExtraClub;
   });
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
@@ -136,9 +142,13 @@ const AdminDashboard = () => {
       </div>
       
       {activeTab === 'users' ? (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="relative w-full max-w-md">
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Users & Roles</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all users and assign them to clubs.</p>
+            </div>
+            <div className="relative w-full sm:w-64">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
@@ -146,10 +156,10 @@ const AdminDashboard = () => {
               </div>
               <input
                 type="text"
-                placeholder="Search users by name, email or username..."
+                placeholder="Search users or clubs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl leading-5 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm transition-colors shadow-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-colors shadow-sm"
               />
             </div>
           </div>

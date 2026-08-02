@@ -130,7 +130,13 @@ const ClubManagement = () => {
   const filteredClubs = clubs.filter(c => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
-    return c.name.toLowerCase().includes(query) || c.slug.toLowerCase().includes(query);
+    
+    const matchesMain = c.name.toLowerCase().includes(query) || c.slug.toLowerCase().includes(query);
+    const matchesSub = c.sub_clubs && c.sub_clubs.some(sub => 
+      sub.name.toLowerCase().includes(query) || sub.slug.toLowerCase().includes(query)
+    );
+    
+    return matchesMain || matchesSub;
   });
 
   return (
