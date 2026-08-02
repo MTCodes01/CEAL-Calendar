@@ -12,7 +12,9 @@ const ClubManagement = () => {
     slug: '',
     color: '#3B82F6',
     parent: null,
-    order: 0
+    order: 0,
+    sender_email: '',
+    sender_password: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -95,7 +97,7 @@ const ClubManagement = () => {
       }
       setEditingClub(null);
       setIsAdding(false);
-      setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0 });
+      setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0, sender_email: '', sender_password: '' });
       fetchClubs();
     } catch (err) {
       console.error('Failed to save club', err);
@@ -120,7 +122,9 @@ const ClubManagement = () => {
       slug: club.slug,
       color: club.color,
       parent: club.parent,
-      order: club.order
+      order: club.order,
+      sender_email: club.sender_email || '',
+      sender_password: ''
     });
     setIsAdding(true);
   };
@@ -163,7 +167,7 @@ const ClubManagement = () => {
             />
           </div>
           <button
-            onClick={() => { setIsAdding(true); setEditingClub(null); setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0 }); }}
+            onClick={() => { setIsAdding(true); setEditingClub(null); setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0, sender_email: '', sender_password: '' }); }}
             className="w-full sm:w-auto px-5 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
           >
             + Add New Club
@@ -235,6 +239,41 @@ const ClubManagement = () => {
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          <div className="border-b border-gray-200 dark:border-gray-700 pb-4 pt-4 mt-6">
+            <h4 className="text-md font-semibold text-gray-900 dark:text-white">Email Notification Settings (Optional)</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Configure a custom sender email and app password for this club's event notifications. Leave blank to use the system default.
+            </p>
+            {editingClub?.has_custom_email && (
+              <div className="mt-2 text-sm text-green-600 dark:text-green-400 font-medium flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                Custom credentials are securely configured. Provide a new password below only if you wish to change it. To remove custom credentials, clear the email field and save.
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Sender Email</label>
+              <input
+                type="email"
+                value={formData.sender_email}
+                onChange={(e) => setFormData({ ...formData, sender_email: e.target.value })}
+                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/50 px-4 py-2.5 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/50 transition-colors shadow-sm sm:text-sm placeholder-gray-400"
+                placeholder="e.g. club@gmail.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">App Password</label>
+              <input
+                type="password"
+                value={formData.sender_password}
+                onChange={(e) => setFormData({ ...formData, sender_password: e.target.value })}
+                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/50 px-4 py-2.5 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/50 transition-colors shadow-sm sm:text-sm placeholder-gray-400"
+                placeholder={editingClub?.has_custom_email ? "••••••••••••••••" : "Leave blank to use default"}
+              />
             </div>
           </div>
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100 dark:border-gray-700">
