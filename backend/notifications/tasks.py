@@ -2,11 +2,13 @@ import logging
 from datetime import timedelta
 
 from celery import shared_task
-from django.core.mail import send_mail
+from django.core.mail import send_mail, get_connection
+from django.core.mail.backends.smtp import EmailBackend
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.conf import settings
 from datetime import datetime
+from collections import defaultdict
 
 import pytz
 
@@ -14,6 +16,7 @@ from django.db.models import Q
 
 from accounts.models import User
 from events.models import Event, DeletedEventLog
+from clubs.models import Club
 from .utils import convert_to_local, is_within_minute, is_notification_due_today, format_event_datetime
 
 logger = logging.getLogger(__name__)
@@ -130,13 +133,36 @@ def dispatch_notifications(self):
                 user.save(update_fields=['last_notification_sent_at'])
                 continue
 
+            # Pre-fetch all clubs to a dict by name for cancelled events mapping
+            all_clubs = {c.name: c for c in Club.objects.all()}
+            
+            # Group by Club object (or None for unknown clubs)
+            club_grouped = defaultdict(lambda: {'events': [], 'cancelled': []})
+            
+            for event in new_events:
+                club_grouped[event.club]['events'].append(event)
+                
+            for cancelled_event in cancelled_events:
+                club = all_clubs.get(cancelled_event.club_name)
+                club_grouped[club]['cancelled'].append(cancelled_event)
+
             logger.info(
-                "Sending %d new/updated event(s) and %d cancelled event(s) to user %s.",
-                len(new_events), len(cancelled_events), user.email
+                "Sending %d new/updated event(s) and %d cancelled event(s) to user %s across %d club(s).",
+                len(new_events), len(cancelled_events), user.email, len(club_grouped)
             )
 
-            success = send_digest_email(user, new_events, cancelled_events)
-            if success:
+            user_sent_count = 0
+            for club, grouped in club_grouped.items():
+                evts = grouped['events']
+                canc = grouped['cancelled']
+                if not evts and not canc:
+                    continue
+                
+                success = send_digest_email(user, evts, canc, club)
+                if success:
+                    user_sent_count += 1
+            
+            if user_sent_count > 0:
                 user.last_notification_sent_at = now_utc
                 user.save(update_fields=['last_notification_sent_at'])
                 sent_count += 1
@@ -149,7 +175,7 @@ def dispatch_notifications(self):
     return result
 
 
-def send_digest_email(user, events, cancelled_events=None):
+def send_digest_email(user, events, cancelled_events=None, club=None):
     """
     Send HTML email digest with upcoming events to a user.
 
@@ -157,6 +183,7 @@ def send_digest_email(user, events, cancelled_events=None):
         user: User object
         events: list of Event objects (from any club)
         cancelled_events: list of DeletedEventLog objects
+        club: The Club object these events belong to (for custom sender email)
 
     Returns:
         bool: True if email sent successfully
@@ -210,22 +237,45 @@ def send_digest_email(user, events, cancelled_events=None):
             'cancelled_events': cancelled_event_data,
             'event_count': total_events,
             'frontend_url': settings.FRONTEND_URL,
+            'club': club,
         })
+
+        connection = None
+        from_email = settings.DEFAULT_FROM_EMAIL
+        
+        if club and club.sender_email and club.get_sender_password():
+            try:
+                connection = EmailBackend(
+                    host='smtp.gmail.com',
+                    port=587,
+                    username=club.sender_email,
+                    password=club.get_sender_password(),
+                    use_tls=True,
+                    fail_silently=False,
+                )
+                from_email = f"{club.name} <{club.sender_email}>"
+            except Exception as e:
+                logger.error("Failed to setup custom email for club %s: %s", club.name, e)
+                connection = None
+                from_email = settings.DEFAULT_FROM_EMAIL
+
+        subject_prefix = f"Upcoming Events from {club.name}" if club else "Upcoming Events - CampusCalendar"
 
         # Send email
         send_mail(
-            subject=f"Upcoming Events - CampusCalendar",
+            subject=subject_prefix,
             message=(
-                f"You have {total_events} event update(s) across clubs. "
+                f"You have {total_events} event update(s). "
                 f"Visit {settings.FRONTEND_URL} to view details."
             ),
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            from_email=from_email,
             recipient_list=[user.email],
             html_message=html_content,
+            connection=connection,
             fail_silently=False,
         )
 
-        logger.info("Digest email sent to %s (%d total updates)", user.email, total_events)
+        logger.info("Digest email sent to %s (%d total updates, from %s)", user.email, total_events, from_email)
         return True
 
     except Exception as e:

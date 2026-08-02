@@ -15,6 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
 
+# Encryption key for custom sender passwords
+ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY', 'nJTSoFqQTPzuVXNVquagAPu1-zczPh0ocv85-kF4yxg=')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
@@ -111,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 PASSWORD_RESET_TIMEOUT = 900  # 15 minutes
 
 # Application Version
-APP_VERSION = "1.0.4"
+APP_VERSION = "1.0.5"
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
