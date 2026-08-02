@@ -7,10 +7,11 @@ A full-stack web application for managing college club events with real-time cal
 - **User Authentication**: JWT-based login/signup with email verification
 - **Interactive Calendar**: Monthly, weekly, and daily views using FullCalendar
 - **Event Management**: Create, edit, and delete events with datetime and location support
-- **Role-Based Permissions**: Club members can edit any event in their club
-- **Club Filtering**: Filter events by multiple clubs with color-coded display
-- **Smart Notifications**: Timezone-aware email notifications for new events
-- **Email Digest**: Beautiful HTML emails with event tables
+- **Role-Based Permissions**: Users can be assigned to main clubs, sub-clubs, and additional clubs.
+- **Club Hierarchy**: Create, edit, search, and drag-and-drop club hierarchies from the Admin Dashboard.
+- **Smart Notifications**: Timezone and format-aware (12h/24h) email notifications for new, updated, and cancelled events.
+- **Audit Logging**: Comprehensive activity tracking for event and user access changes.
+- **Email Digest**: Beautiful HTML emails with event tables showing creators and recent updaters.
 - **Overlapping Events**: Support for multiple events at the same time in different locations
 
 ## 🛠️ Technology Stack
@@ -151,10 +152,11 @@ A full-stack web application for managing college club events with real-time cal
 ## 🎯 User Roles & Permissions
 
 - **Guests**: View-only access to events
+- **Super Admins**: Global access to manage users, assign roles, and modify club hierarchies with full search capabilities.
 - **Club Members**: 
-  - Create events for their club
-  - Edit/delete ANY event in their club
-  - Cannot modify events from other clubs
+  - Create events for their assigned main club, sub-club, or extra clubs
+  - Edit/delete ANY event in their assigned clubs (and sub-clubs)
+  - Cannot modify events from unauthorized clubs
 
 ## 📧 Notification System
 
@@ -165,15 +167,14 @@ A full-stack web application for managing college club events with real-time cal
 3. Celery Beat runs every minute to check notification times
 4. Emails are sent ONLY if:
    - User has notifications enabled
-   - Current time matches notification time
-   - NEW events were created since last notification
-   - Events belong to the user's club
+   - Current time matches notification time (in their local timezone)
+   - NEW, UPDATED, or CANCELLED events exist in the 24h window for their clubs.
 
 ### Email Template
 
 - Professional HTML design with gradients
-- Event table with Title, Date/Time, Location, Description
-- Created by information
+- Event tables with Title, Date/Time, Location, Description, and Author
+- Highlights for updated and cancelled events
 - Opt-out instructions
 - Links to calendar and settings
 
@@ -182,10 +183,13 @@ A full-stack web application for managing college club events with real-time cal
 ### User
 ```python
 - email (unique)
-- club (ForeignKey to Club)
+- club (ForeignKey to Club - Main Club)
+- sub_club (ForeignKey to Club)
+- extra_clubs (ManyToManyField to Club)
 - notification_enabled (Boolean)
 - notification_time (Time)
 - timezone (CharField)
+- time_format (CharField - 12h/24h)
 - last_notification_sent_at (DateTime)
 ```
 
@@ -194,6 +198,8 @@ A full-stack web application for managing college club events with real-time cal
 - slug (unique)
 - name
 - color (hex color for calendar)
+- parent (ForeignKey to Club for sub-clubs)
+- order (Integer for drag-and-drop sorting)
 ```
 
 ### Event
@@ -205,6 +211,14 @@ A full-stack web application for managing college club events with real-time cal
 - location
 - club (ForeignKey)
 - created_by (ForeignKey to User)
+- updated_by (ForeignKey to User)
+- collaborating_clubs (ManyToManyField)
+```
+
+### Logs
+```python
+- ActivityLog: Tracks actor, action (CREATE/UPDATE/DELETE), entity, and details payload
+- DeletedEventLog: Tracks future cancelled events to notify users
 ```
 
 ## 🎨 Theme & Design
