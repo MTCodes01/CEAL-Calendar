@@ -101,7 +101,10 @@ const ClubManagement = () => {
       fetchClubs();
     } catch (err) {
       console.error('Failed to save club', err);
-      alert('Failed to save club. Ensure slug is unique.');
+      const errorMsg = err.response?.data 
+        ? (typeof err.response.data === 'object' ? JSON.stringify(err.response.data) : err.response.data) 
+        : err.message;
+      alert(`Failed to save club: ${errorMsg}`);
     }
   };
 

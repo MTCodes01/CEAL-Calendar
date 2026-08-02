@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client';
 
-const FRONTEND_VERSION = '1.1.8';
+const FRONTEND_VERSION = '1.1.9';
 
 export default function Footer() {
   const [backendVersion, setBackendVersion] = useState('...');
