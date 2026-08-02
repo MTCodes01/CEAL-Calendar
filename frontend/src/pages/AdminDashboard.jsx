@@ -15,6 +15,7 @@ const AdminDashboard = () => {
   const [selectedSubClub, setSelectedSubClub] = useState('');
   const [selectedExtraClubs, setSelectedExtraClubs] = useState([]);
   const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -99,6 +100,15 @@ const AdminDashboard = () => {
 
   const extraClubOptions = allFlatClubs.filter(c => !primaryClubIds.has(c.id));
 
+  const filteredUsers = users.filter(u => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    const fullName = `${u.first_name || ''} ${u.last_name || ''}`.toLowerCase();
+    return fullName.includes(query) || 
+           (u.email && u.email.toLowerCase().includes(query)) ||
+           (u.username && u.username.toLowerCase().includes(query));
+  });
+
   if (loading) return <div className="p-8 text-center">Loading...</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
@@ -126,8 +136,25 @@ const AdminDashboard = () => {
       </div>
       
       {activeTab === 'users' ? (
-        <div className="bg-white dark:bg-gray-800 shadow-xl overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
-          <div className="overflow-x-auto custom-scrollbar">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="relative w-full max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search users by name, email or username..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl leading-5 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 sm:text-sm transition-colors shadow-sm"
+              />
+            </div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 shadow-xl overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
+            <div className="overflow-x-auto custom-scrollbar">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-900/50">
                 <tr>
@@ -140,8 +167,15 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-gray-700">
-                {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-primary-500/5 transition-colors group">
+                {filteredUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                      No users found matching "{searchQuery}"
+                    </td>
+                  </tr>
+                ) : (
+                  filteredUsers.map((u) => (
+                    <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-primary-500/5 transition-colors group">
                     <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                         {u.first_name} {u.last_name}
@@ -187,10 +221,11 @@ const AdminDashboard = () => {
                       <button onClick={() => handleDelete(u.id)} className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors">Delete</button>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       ) : (
         <ClubManagement />

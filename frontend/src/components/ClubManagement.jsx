@@ -14,6 +14,7 @@ const ClubManagement = () => {
     parent: null,
     order: 0
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchClubs();
@@ -126,19 +127,42 @@ const ClubManagement = () => {
 
   if (loading) return <div className="p-4">Loading clubs...</div>;
 
+  const filteredClubs = clubs.filter(c => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return c.name.toLowerCase().includes(query) || c.slug.toLowerCase().includes(query);
+  });
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Clubs & Hierarchy</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all clubs, sub-clubs, and their respective ordering.</p>
         </div>
-        <button
-          onClick={() => { setIsAdding(true); setEditingClub(null); setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0 }); }}
-          className="px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 shadow-sm transition-all focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-        >
-          + Add New Club
-        </button>
+        
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="relative w-full sm:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search clubs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-colors"
+            />
+          </div>
+          <button
+            onClick={() => { setIsAdding(true); setEditingClub(null); setFormData({ name: '', slug: '', color: '#3B82F6', parent: null, order: 0 }); }}
+            className="w-full sm:w-auto px-5 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          >
+            + Add New Club
+          </button>
+        </div>
       </div>
 
       {isAdding && (
@@ -229,8 +253,8 @@ const ClubManagement = () => {
         <Droppable droppableId="main-clubs">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-              {clubs.map((club, index) => (
-                <Draggable key={club.id} draggableId={`club-${club.id}`} index={index}>
+              {filteredClubs.map((club, index) => (
+                <Draggable key={club.id} draggableId={`club-${club.id}`} index={index} isDragDisabled={!!searchQuery}>
                   {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -264,8 +288,12 @@ const ClubManagement = () => {
                           <Droppable droppableId={`subclubs-${club.id}`}>
                             {(subProvided) => (
                               <div {...subProvided.droppableProps} ref={subProvided.innerRef} className="ml-10 space-y-2 mt-3 border-l-2 border-gray-100 dark:border-gray-700/50 pl-4 py-1">
-                                {club.sub_clubs && club.sub_clubs.map((sub, sIndex) => (
-                                  <Draggable key={sub.id} draggableId={`sub-${sub.id}`} index={sIndex}>
+                                {club.sub_clubs && club.sub_clubs.filter(sub => {
+                                  if (!searchQuery) return true;
+                                  const query = searchQuery.toLowerCase();
+                                  return sub.name.toLowerCase().includes(query) || sub.slug.toLowerCase().includes(query);
+                                }).map((sub, sIndex) => (
+                                  <Draggable key={sub.id} draggableId={`sub-${sub.id}`} index={sIndex} isDragDisabled={!!searchQuery}>
                                     {(subDragProvided) => (
                                       <div
                                         ref={subDragProvided.innerRef}
