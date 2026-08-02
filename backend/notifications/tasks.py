@@ -13,7 +13,7 @@ import pytz
 from django.db.models import Q
 
 from accounts.models import User
-from events.models import Event
+from events.models import Event, DeletedEventLog
 from .utils import convert_to_local, is_within_minute, is_notification_due_today, format_event_datetime
 
 logger = logging.getLogger(__name__)
@@ -98,26 +98,44 @@ def dispatch_notifications(self):
 
             # Query events across ALL clubs that:
             # - Were added or updated in the 24h period before the notification
+            # - Are upcoming (not completely in the past)
             new_events = list(
                 Event.objects
                 .filter(
                     Q(created_at__gt=effective_start_utc, created_at__lte=now_utc) |
                     Q(updated_at__gt=effective_start_utc, updated_at__lte=now_utc)
                 )
+                .filter(end__gte=now_utc)
                 .select_related('club', 'created_by')
                 .order_by('start')
             )
+            
+            # Query cancelled events: deleted in the 24h period, still upcoming, 
+            # and were created BEFORE the 24h window (meaning the user already got notified about them)
+            cancelled_events = list(
+                DeletedEventLog.objects
+                .filter(
+                    deleted_at__gt=effective_start_utc,
+                    deleted_at__lte=now_utc,
+                    end__gte=now_utc,
+                    event_created_at__lte=effective_start_utc
+                )
+                .order_by('start')
+            )
 
-            if not new_events:
+            if not new_events and not cancelled_events:
                 logger.debug("No relevant events for user %s.", user.email)
+                # Ensure we record that we checked today so they don't get immediate emails later today
+                user.last_notification_sent_at = now_utc
+                user.save(update_fields=['last_notification_sent_at'])
                 continue
 
             logger.info(
-                "Sending %d event(s) to user %s.",
-                len(new_events), user.email
+                "Sending %d new/updated event(s) and %d cancelled event(s) to user %s.",
+                len(new_events), len(cancelled_events), user.email
             )
 
-            success = send_digest_email(user, new_events)
+            success = send_digest_email(user, new_events, cancelled_events)
             if success:
                 user.last_notification_sent_at = now_utc
                 user.save(update_fields=['last_notification_sent_at'])
@@ -131,17 +149,20 @@ def dispatch_notifications(self):
     return result
 
 
-def send_digest_email(user, events):
+def send_digest_email(user, events, cancelled_events=None):
     """
     Send HTML email digest with upcoming events to a user.
 
     Args:
         user: User object
         events: list of Event objects (from any club)
+        cancelled_events: list of DeletedEventLog objects
 
     Returns:
         bool: True if email sent successfully
     """
+    if cancelled_events is None:
+        cancelled_events = []
     try:
         # Prepare event data for template
         created_events = []
@@ -156,8 +177,8 @@ def send_digest_email(user, events):
                 'title': event.title,
                 'club_name': event.club.name,
                 'description': event.description,
-                'datetime': format_event_datetime(event.start, user.timezone),
-                'end_datetime': format_event_datetime(event.end, user.timezone),
+                'datetime': format_event_datetime(event.start, user.timezone, user.time_format),
+                'end_datetime': format_event_datetime(event.end, user.timezone, user.time_format),
                 'location': event.location,
                 'created_by': f"{event.created_by.first_name} {event.created_by.last_name}".strip() or event.created_by.username,
             }
@@ -165,13 +186,24 @@ def send_digest_email(user, events):
                 updated_events.append(event_data)
             else:
                 created_events.append(event_data)
+                
+        cancelled_event_data = []
+        for event in cancelled_events:
+            cancelled_event_data.append({
+                'title': event.title,
+                'club_name': event.club_name,
+                'datetime': format_event_datetime(event.start, user.timezone, user.time_format),
+                'end_datetime': format_event_datetime(event.end, user.timezone, user.time_format),
+            })
 
         # Render HTML email
+        total_events = len(events) + len(cancelled_events)
         html_content = render_to_string('email_digest.html', {
             'user': user,
             'created_events': created_events,
             'updated_events': updated_events,
-            'event_count': len(events),
+            'cancelled_events': cancelled_event_data,
+            'event_count': total_events,
             'frontend_url': settings.FRONTEND_URL,
         })
 
@@ -179,7 +211,7 @@ def send_digest_email(user, events):
         send_mail(
             subject=f"Upcoming Events - CampusCalendar",
             message=(
-                f"You have {len(event_data)} upcoming event(s) across clubs. "
+                f"You have {total_events} event update(s) across clubs. "
                 f"Visit {settings.FRONTEND_URL} to view details."
             ),
             from_email=settings.DEFAULT_FROM_EMAIL,
@@ -188,7 +220,7 @@ def send_digest_email(user, events):
             fail_silently=False,
         )
 
-        logger.info("Digest email sent to %s (%d events)", user.email, len(event_data))
+        logger.info("Digest email sent to %s (%d total updates)", user.email, total_events)
         return True
 
     except Exception as e:

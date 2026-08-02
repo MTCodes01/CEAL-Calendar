@@ -217,6 +217,23 @@
             {% endfor %}
             {% endif %}
 
+            {% if cancelled_events %}
+            <div class="section-title" style="color: #dc2626; border-bottom-color: #fecaca; margin-top: 40px;">Cancelled Events</div>
+            {% for event in cancelled_events %}
+            <div class="event-card" style="border-left: 4px solid #ef4444; background-color: #fff5f5;">
+                <div class="event-title" style="text-decoration: line-through; color: #6b7280;">{{ event.title }}</div>
+                <div class="club-tag" style="background-color: #fee2e2; color: #b91c1c;">{{ event.club_name }}</div>
+
+                <div class="event-meta">
+                    <strong>When:</strong> {{ event.datetime }} to {{ event.end_datetime }}
+                </div>
+                <div class="event-meta" style="color: #ef4444; font-weight: 600; margin-top: 8px;">
+                    This event has been cancelled and is no longer happening.
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
             <div class="note">
                 <strong>💡 Note:</strong> You receive these notifications because you have event notifications enabled
                 in your account settings. You can manage them below.

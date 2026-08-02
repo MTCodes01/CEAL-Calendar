@@ -43,3 +43,21 @@ class Event(models.Model):
     
     def __str__(self):
         return f"{self.title} ({self.club.name}) - {self.start.strftime('%Y-%m-%d %H:%M')}"
+
+
+class DeletedEventLog(models.Model):
+    """
+    Log of deleted events to notify users about cancellations.
+    """
+    title = models.CharField(max_length=255)
+    club_name = models.CharField(max_length=255)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    event_created_at = models.DateTimeField()
+    deleted_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-deleted_at']
+        
+    def __str__(self):
+        return f"Deleted: {self.title} ({self.club_name})"

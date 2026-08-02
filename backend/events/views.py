@@ -214,5 +214,19 @@ class EventViewSet(viewsets.ModelViewSet):
                     raise PermissionDenied("You can only delete events for your club and its sub-clubs.")
             else:
                 raise PermissionDenied("You must be a member of a club to delete events.")
+                
+        # Log deletion if the event is in the future
+        from django.utils import timezone
+        from .models import DeletedEventLog
+        
+        if instance.end >= timezone.now():
+            DeletedEventLog.objects.create(
+                title=instance.title,
+                club_name=instance.club.name,
+                start=instance.start,
+                end=instance.end,
+                event_created_at=instance.created_at
+            )
+            
         logger.info("Event deleted: '%s' (id=%s) by %s", instance.title, instance.id, user.email)
         instance.delete()

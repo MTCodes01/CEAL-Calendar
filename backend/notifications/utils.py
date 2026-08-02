@@ -74,13 +74,14 @@ def is_notification_due_today(local_now, notification_time, last_sent_utc, user_
         return False
 
 
-def format_event_datetime(dt, timezone_str):
+def format_event_datetime(dt, timezone_str, time_format='12h'):
     """
     Format event datetime for display in user's timezone.
     
     Args:
         dt: datetime object
         timezone_str: timezone string
+        time_format: '12h' or '24h'
     
     Returns:
         str: Formatted datetime string
@@ -88,6 +89,9 @@ def format_event_datetime(dt, timezone_str):
     try:
         user_tz = pytz.timezone(timezone_str)
         local_dt = dt.astimezone(user_tz)
-        return local_dt.strftime('%B %d, %Y at %I:%M %p')
     except Exception:
-        return dt.strftime('%B %d, %Y at %I:%M %p')
+        local_dt = dt
+        
+    if time_format == '24h':
+        return local_dt.strftime('%B %d, %Y at %H:%M')
+    return local_dt.strftime('%B %d, %Y at %I:%M %p')
