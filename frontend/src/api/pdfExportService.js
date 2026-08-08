@@ -399,10 +399,10 @@ export const exportToPDF = async (events, selectedClubs, dateRange, viewType, th
   let fileName;
 
   if (viewType === 'timeGridDay') {
-    fileName = `CampusCalendar_${startStr}.pdf`;
+    fileName = `CEAL_Calendar_${startStr}.pdf`;
   } else if (viewType === 'timeGridWeek') {
     const endStr = formatFileNameDate(new Date(dateRange.end).getTime() - 86400000); // Subtract 1 day because FC end is exclusive
-    fileName = `CampusCalendar_${startStr}_to_${endStr}.pdf`;
+    fileName = `CEAL_Calendar_${startStr}_to_${endStr}.pdf`;
   } else if (viewType === 'dayGridMonth') {
     const d = new Date(dateRange.start);
     // Month views usually start at the beginning of the actual month, 
@@ -410,9 +410,9 @@ export const exportToPDF = async (events, selectedClubs, dateRange, viewType, th
     // We'll use the month name/year for the filename.
     const monthName = d.toLocaleDateString(undefined, { month: '2-digit' });
     const year = d.getFullYear();
-    fileName = `CampusCalendar_${monthName}_${year}.pdf`;
+    fileName = `CEAL_Calendar_${monthName}_${year}.pdf`;
   } else {
-    fileName = `CampusCalendar_${new Date().toISOString().split('T')[0]}.pdf`;
+    fileName = `CEAL_Calendar_${new Date().toISOString().split('T')[0]}.pdf`;
   }
 
   doc.save(fileName);

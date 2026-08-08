@@ -1,4 +1,4 @@
-# CampusCalendar - College Event Management System
+# CEAL Calendar - College Event Management System
 
 A full-stack web application for managing college club events with real-time calendar views, role-based access control, and intelligent email notifications.
 

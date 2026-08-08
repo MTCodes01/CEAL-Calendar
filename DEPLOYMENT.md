@@ -1,4 +1,4 @@
-# CampusCalendar - Cloudflare Tunnel Deployment Guide
+# CEAL Calendar - Cloudflare Tunnel Deployment Guide
 
 ## Prerequisites
 
@@ -300,7 +300,7 @@ docker-compose up -d --build
 ### Step 15: Test Your Deployment
 
 1. **Test Frontend**: Open `https://ceal.domain.com` in your browser
-   - Should show the CampusCalendar login page
+   - Should show the CEAL Calendar login page
    - Check browser console for errors
 
 2. **Test Backend API**: 
@@ -506,7 +506,7 @@ If your server IP changes:
 
 ---
 
-**🎉 Your CampusCalendar is now deployed and accessible via Cloudflare Tunnel!**
+**🎉 Your CEAL Calendar is now deployed and accessible via Cloudflare Tunnel!**
 
 For support, check the logs or refer to:
 - [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
