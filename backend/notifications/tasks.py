@@ -247,13 +247,20 @@ def send_digest_email(user, events, cancelled_events=None, club=None):
         connection = None
         from_email = settings.DEFAULT_FROM_EMAIL
         
-        if club and club.sender_email and club.get_sender_password():
+        club_password = None
+        if club and club.sender_email:
+            try:
+                club_password = club.get_sender_password()
+            except Exception as e:
+                logger.error("Failed to decrypt password for club %s: %s", club.name, e)
+
+        if club and club.sender_email and club_password:
             try:
                 connection = EmailBackend(
                     host='smtp.gmail.com',
                     port=587,
                     username=club.sender_email,
-                    password=club.get_sender_password(),
+                    password=club_password,
                     use_tls=True,
                     fail_silently=False,
                 )
