@@ -86,6 +86,18 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         if (onEventResize) onEventResize(info);
       }}
       select={(info) => {
+        const isMonthView = info.view.type === 'dayGridMonth';
+        const diffInMs = info.end.getTime() - info.start.getTime();
+        const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+        
+        if (isMonthView && diffInDays <= 1) {
+          // This is a single click in month view.
+          // The dateClick handler will handle navigating to the day view.
+          const calendarApi = calendarRef.current.getApi();
+          calendarApi.unselect();
+          return;
+        }
+
         if (onDateSelect) {
           onDateSelect(info.start, info.end);
         }
