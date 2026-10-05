@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 PASSWORD_RESET_TIMEOUT = 900  # 15 minutes
 
 # Application Version
-APP_VERSION = "1.0.9"
+APP_VERSION = "1.1.0"
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
