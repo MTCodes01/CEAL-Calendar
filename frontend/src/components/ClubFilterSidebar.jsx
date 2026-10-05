@@ -3,7 +3,7 @@ export default function ClubFilterSidebar({ clubs, selectedClubs, onToggleClub, 
   const mainClubs = clubs.filter(club => !club.parent);
 
   return (
-    <div className="w-full md:w-64 bg-white/95 dark:bg-gray-900/95 md:bg-white/80 md:dark:bg-gray-900/80 backdrop-blur-md shadow-lg p-6 flex flex-col h-full border-r border-gray-200/50 dark:border-gray-800/50 z-10 transition-colors duration-200">
+    <div className="w-full md:w-64 bg-white/95 dark:bg-gray-950/60 md:bg-white/80 md:dark:bg-gray-950/60 backdrop-blur-xl shadow-lg p-6 flex flex-col h-full border-r border-gray-200/50 dark:border-white/5 z-10 transition-colors duration-200">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">Filter by Club</h2>
         <button
@@ -21,8 +21,8 @@ export default function ClubFilterSidebar({ clubs, selectedClubs, onToggleClub, 
           onClick={onSelectAll}
           className={`flex-1 text-xs font-bold px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 ${
             selectedClubs.length > 0 && selectedClubs.length >= clubs.reduce((acc, club) => acc + 1 + (club.sub_clubs ? club.sub_clubs.length : 0), 0)
-              ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/25 hover:bg-primary-700'
-              : 'bg-white dark:bg-gray-800 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 border border-primary-200 dark:border-primary-800 shadow-sm'
+              ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/25 dark:shadow-md hover:bg-primary-500'
+              : 'bg-white dark:bg-white/5 text-primary-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-white/10 border border-primary-200 dark:border-transparent shadow-sm'
           }`}
         >
           All
@@ -31,8 +31,8 @@ export default function ClubFilterSidebar({ clubs, selectedClubs, onToggleClub, 
           onClick={onDeselectAll}
           className={`flex-1 text-xs font-bold px-3 py-2 rounded-lg transition-all duration-300 transform active:scale-95 ${
             selectedClubs.length === 0
-              ? 'bg-gray-800 dark:bg-gray-700 text-white shadow-lg shadow-gray-900/20 hover:bg-gray-900 dark:hover:bg-gray-600'
-              : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 border border-gray-200 dark:border-gray-800 shadow-sm'
+              ? 'bg-gray-800 dark:bg-white/10 text-white shadow-lg dark:shadow-none hover:bg-gray-900 dark:hover:bg-white/20'
+              : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/10 border border-gray-200 dark:border-transparent shadow-sm'
           }`}
         >
           None

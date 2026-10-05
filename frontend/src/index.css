@@ -188,7 +188,10 @@ body > .fc-event-mirror {
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200;
+    @apply bg-gray-50 text-gray-900 transition-colors duration-200;
+  }
+  .dark body {
+    @apply bg-gray-950 text-gray-50;
   }
 }
 
@@ -196,25 +199,25 @@ body > .fc-event-mirror {
 .dark .fc {
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
-  --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
-  --fc-theme-standard-border-color: rgba(255, 255, 255, 0.05);
-  --fc-today-bg-color: rgba(79, 70, 229, 0.1);
+  --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.03);
+  --fc-theme-standard-border-color: rgba(255, 255, 255, 0.06);
+  --fc-today-bg-color: transparent;
 }
 
 .dark .fc-theme-standard .fc-scrollgrid {
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .dark .fc-theme-standard td,
 .dark .fc-theme-standard th {
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .dark .fc-col-header-cell-cushion,
 .dark .fc-daygrid-day-number,
 .dark .fc-list-day-text,
 .dark .fc-list-day-side-text {
-  color: #e2e8f0;
+  color: #f5f7fa;
 }
 
 .dark .fc-col-header-cell {
@@ -222,66 +225,81 @@ body > .fc-event-mirror {
 }
 
 .dark .fc-daygrid-day.fc-day-today {
-  background-color: rgba(79, 70, 229, 0.1) !important;
+  background: rgba(79, 124, 255, 0.08) !important;
+}
+
+.dark .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  color: #4F7CFF;
+  font-weight: bold;
+}
+
+/* Dates outside current month */
+.dark .fc-day-other .fc-daygrid-day-number {
+  color: #8b95a7;
 }
 
 .dark .fc-list-event:hover td {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .dark .fc-toolbar-title {
-  color: #f8fafc;
+  color: #f5f7fa;
 }
 
 /* Dark mode buttons */
 .dark .fc .fc-button-primary {
-  background-color: rgba(30, 41, 59, 0.5) !important;
-  border-color: rgba(71, 85, 105, 0.5) !important;
+  background-color: rgba(16, 21, 34, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
   color: #cbd5e1 !important;
   backdrop-filter: blur(8px);
 }
 
 .dark .fc .fc-button-primary:hover {
-  background-color: rgba(51, 65, 85, 0.7) !important;
-  border-color: rgba(100, 116, 139, 0.7) !important;
-  color: #f8fafc !important;
+  background-color: rgba(21, 27, 42, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f5f7fa !important;
 }
 
 .dark .fc .fc-button-group {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(11, 15, 24, 0.6) !important;
+  backdrop-filter: blur(8px);
+  padding: 2px;
+  border-radius: 0.6rem !important;
 }
 
 .dark .fc .fc-button-group>.fc-button {
-  background-color: #1e293b !important;
-  /* Slate 800 */
-  color: #cbd5e1 !important;
-  /* Slate 300 */
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: transparent !important;
+  color: #8b95a7 !important;
+  border: none !important;
+  border-radius: 0.4rem !important;
+  margin: 0 !important;
 }
 
 .dark .fc .fc-button-group>.fc-button:hover {
-  background-color: #334155 !important;
-  /* Slate 700 */
-  color: #f8fafc !important;
-  /* Slate 50 */
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #f5f7fa !important;
 }
 
+.dark .fc .fc-button-group>.fc-button-primary:not(:disabled).fc-button-active,
+.dark .fc .fc-button-group>.fc-button-primary:not(:disabled):active,
 .dark .fc .fc-button-primary:not(:disabled).fc-button-active,
 .dark .fc .fc-button-primary:not(:disabled):active {
-  background-color: #3b82f6 !important;
-  /* Brand Blue */
-  border-color: #3b82f6 !important;
-  color: #ffffff !important;
-}
-
-.dark .fc-button-group .fc-button:last-child {
-  border-right: none !important;
+  background-color: rgba(79, 124, 255, 0.15) !important;
+  border-color: transparent !important;
+  color: #4F7CFF !important;
 }
 
 .dark .fc .fc-button-primary:disabled {
-  background-color: rgba(30, 41, 59, 0.2) !important;
-  border-color: rgba(51, 65, 85, 0.2) !important;
-  color: #64748b !important;
+  background-color: rgba(11, 15, 24, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.03) !important;
+  color: #52606d !important;
+}
+
+/* Event glow in dark mode */
+.dark .fc-event {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* DatePicker Dark Mode */

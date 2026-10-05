@@ -105,7 +105,7 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
       `}</style>
       
       {/* Mobile Sticky Header (Hidden on Desktop) */}
-      <div className="flex md:hidden sticky top-0 z-40 bg-gray-50/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 p-3 mb-4 rounded-xl shadow-sm flex-col items-center gap-3 transition-colors">
+      <div className="flex md:hidden sticky top-0 z-40 bg-gray-50/95 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 p-3 mb-4 rounded-xl shadow-sm flex-col items-center gap-3 transition-colors">
         
         {/* Row 1: < Title > */}
         <div className="flex items-center justify-center gap-4 w-full">
@@ -147,18 +147,18 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         {/* Row 2: Today */}
         <button 
           onClick={() => calendarRef.current?.getApi()?.today()}
-          className="px-6 py-1.5 text-sm font-medium rounded-full bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 transition-all shadow-sm"
+          className="px-6 py-1.5 text-sm font-medium rounded-full bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/5 transition-all shadow-sm dark:shadow-none"
         >
           Today
         </button>
 
         {/* Row 3: Views */}
-        <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 shadow-sm w-full max-w-[280px]">
+        <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm w-full max-w-[280px]">
           {['dayGridMonth', 'timeGridWeek', 'timeGridDay'].map((view) => (
             <button
               key={view}
               onClick={() => calendarRef.current?.getApi()?.changeView(view)}
-              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
+              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 shadow-sm dark:shadow-none' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 dark:hover:bg-gray-800/50'}`}
             >
               {view === 'dayGridMonth' ? 'Month' : view === 'timeGridWeek' ? 'Week' : 'Day'}
             </button>
@@ -167,28 +167,28 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
       </div>
 
       {/* Desktop Sticky Header (Hidden on Mobile) */}
-      <div className="hidden md:flex sticky top-0 z-40 bg-gray-50/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 p-4 rounded-xl shadow-sm items-center justify-between gap-4 transition-colors">
+      <div className="hidden md:flex sticky top-0 z-40 bg-gray-50/95 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 p-4 rounded-xl shadow-sm items-center justify-between gap-4 transition-colors">
         
         {/* Left: Prev/Next/Today */}
         <div className="flex items-center gap-2">
-          <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 shadow-sm">
+          <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm">
             <button 
               onClick={() => calendarRef.current?.getApi()?.prev()}
-              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-all"
+              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300 transition-all"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div className="w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+            <div className="w-px bg-gray-200 dark:bg-white/5 mx-1"></div>
             <button 
               onClick={() => calendarRef.current?.getApi()?.next()}
-              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-all"
+              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300 transition-all"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
           <button 
             onClick={() => calendarRef.current?.getApi()?.today()}
-            className="px-4 py-1.5 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 transition-all shadow-sm"
+            className="px-4 py-1.5 text-sm font-medium rounded-lg bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/5 transition-all shadow-sm dark:shadow-none"
           >
             Today
           </button>
@@ -216,12 +216,12 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         </div>
 
         {/* Right: Views */}
-        <div className="flex bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm">
           {['dayGridMonth', 'timeGridWeek', 'timeGridDay'].map((view) => (
             <button
               key={view}
               onClick={() => calendarRef.current?.getApi()?.changeView(view)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
+              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 shadow-sm dark:shadow-none' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 dark:hover:bg-gray-800/50'}`}
             >
               {view === 'dayGridMonth' ? 'Month' : view === 'timeGridWeek' ? 'Week' : 'Day'}
             </button>

@@ -52,7 +52,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
       <Navbar />
       
       <div className="max-w-3xl mx-auto p-8 space-y-6">
@@ -69,7 +69,7 @@ export default function Profile() {
         )}
 
         {/* Profile Info */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transition-colors duration-200">
+        <div className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl border border-transparent dark:border-white/5 rounded-2xl shadow-xl p-8 transition-colors duration-200">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Profile</h1>
 
           <form onSubmit={handleProfileSubmit} className="space-y-4">
@@ -79,7 +79,7 @@ export default function Profile() {
                 <input
                   type="text"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white transition-colors"
                   value={formData.first_name}
                   onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                 />
@@ -89,7 +89,7 @@ export default function Profile() {
                 <input
                   type="text"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white transition-colors"
                   value={formData.last_name}
                   onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
                 />
@@ -101,7 +101,7 @@ export default function Profile() {
               <input
                 type="email"
                 disabled
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-white/5 rounded-lg bg-gray-100 dark:bg-gray-900/30 text-gray-500 dark:text-gray-500 cursor-not-allowed transition-colors"
                 value={user?.email || ''}
               />
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Email cannot be changed</p>

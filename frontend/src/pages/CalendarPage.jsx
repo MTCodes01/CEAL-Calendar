@@ -305,7 +305,7 @@ export default function CalendarPage() {
   const canCreate = !!(user?.club || user?.sub_club || user?.extra_clubs?.length > 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
       <Navbar />
       
       <div className="flex h-[calc(100vh-64px)] overflow-hidden relative">
@@ -346,8 +346,8 @@ export default function CalendarPage() {
           />
         </div>
 
-        <div className="flex-1 p-2 sm:p-4 md:p-6 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-gray-50/50 dark:bg-[#0f172a]/50">
-          <div className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl p-3 sm:p-6 transition-all duration-300 border border-white/20 dark:border-gray-700/50 min-h-full flex flex-col">
+        <div className="flex-1 p-2 sm:p-4 md:p-6 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-gray-50/50 dark:bg-transparent">
+          <div className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl shadow-xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] p-3 sm:p-6 transition-all duration-300 border border-white/20 dark:border-white/5 min-h-full flex flex-col relative">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div className="flex items-center gap-3">
                 <button
@@ -401,7 +401,7 @@ export default function CalendarPage() {
               </div>
             </div>
 
-            <div className="flex-1 min-h-[400px] bg-white/50 dark:bg-gray-800/30 rounded-xl overflow-y-auto p-1 sm:p-2 shadow-inner border border-gray-100 dark:border-gray-800/50">
+            <div className="flex-1 min-h-[400px] bg-white/50 dark:bg-gray-900/30 rounded-xl overflow-y-auto p-1 sm:p-2 shadow-inner border border-gray-100 dark:border-white/5">
               <Calendar
                 ref={calendarRef}
                 events={events}

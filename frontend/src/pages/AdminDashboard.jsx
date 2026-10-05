@@ -119,22 +119,22 @@ const AdminDashboard = () => {
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
         
-        <div className="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+        <div className="flex bg-gray-100 dark:bg-gray-900/50 p-1 rounded-lg backdrop-blur-sm border border-transparent dark:border-white/5">
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab === 'users' ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab === 'users' ? 'bg-white dark:bg-gray-800/90 text-gray-900 dark:text-white shadow dark:shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
           >
             Manage Users
           </button>
           <button
             onClick={() => setActiveTab('clubs')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab === 'clubs' ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab === 'clubs' ? 'bg-white dark:bg-gray-800/90 text-gray-900 dark:text-white shadow dark:shadow-md' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
           >
             Manage Clubs
           </button>
@@ -159,13 +159,13 @@ const AdminDashboard = () => {
                 placeholder="Search users or clubs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-colors shadow-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg leading-5 bg-white dark:bg-gray-900/50 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-colors shadow-sm"
               />
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 shadow-xl overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
+          <div className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl border border-gray-200 dark:border-white/5 transition-all duration-300">
             <div className="overflow-x-auto custom-scrollbar">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
               <thead className="bg-gray-50 dark:bg-gray-900/50">
                 <tr>
                   <th className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest whitespace-nowrap">User Details</th>
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
                   <th className="px-4 sm:px-6 py-4 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white/50 dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
                 {filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
@@ -245,11 +245,11 @@ const AdminDashboard = () => {
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
             </div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200 dark:border-gray-700">
-              <div className="bg-white dark:bg-gray-800 px-6 pt-6 pb-4">
+            <div className="inline-block align-bottom bg-white dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl text-left overflow-hidden shadow-2xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200 dark:border-white/5">
+              <div className="bg-white dark:bg-transparent px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="text-lg leading-6 font-bold text-gray-900 dark:text-white" id="modal-title">
                     Assign Roles
@@ -310,7 +310,7 @@ const AdminDashboard = () => {
                     {extraClubOptions.length === 0 ? (
                       <p className="text-xs text-gray-400 italic">No other clubs available.</p>
                     ) : (
-                      <div className="max-h-40 overflow-y-auto space-y-1.5 border border-gray-200 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-900/30">
+                      <div className="max-h-40 overflow-y-auto space-y-1.5 border border-gray-200 dark:border-white/5 rounded-lg p-2 bg-gray-50 dark:bg-gray-900/30 shadow-inner">
                         {extraClubOptions.map(c => {
                           const checked = selectedExtraClubs.includes(c.id);
                           return (
@@ -318,8 +318,8 @@ const AdminDashboard = () => {
                               key={c.id}
                               className={`flex items-center gap-2.5 px-3 py-1.5 rounded-lg cursor-pointer transition-all ${
                                 checked
-                                  ? 'bg-white dark:bg-gray-700 shadow-sm'
-                                  : 'hover:bg-white dark:hover:bg-gray-700/50'
+                                  ? 'bg-white dark:bg-gray-800/80 shadow-sm dark:shadow-md'
+                                  : 'hover:bg-white dark:hover:bg-gray-800/50'
                               }`}
                             >
                               <input
@@ -349,18 +349,18 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 px-6 py-4 flex flex-row-reverse gap-3">
+              <div className="bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-white/5 px-6 py-4 flex flex-row-reverse gap-3 rounded-b-2xl">
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="inline-flex justify-center rounded-xl border border-transparent shadow-sm px-5 py-2 bg-primary-600 text-sm font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                  className="inline-flex justify-center rounded-xl border border-transparent shadow-sm px-5 py-2 bg-primary-600 text-sm font-semibold text-white hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
                 >
                   Save Changes
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditingUser(null)}
-                  className="inline-flex justify-center rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm px-5 py-2 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                  className="inline-flex justify-center rounded-xl border border-gray-300 dark:border-white/10 shadow-sm px-5 py-2 bg-white dark:bg-white/5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
                 >
                   Cancel
                 </button>

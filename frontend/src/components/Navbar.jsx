@@ -52,7 +52,7 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
+    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/50 backdrop-blur-xl shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.5)] border-b border-gray-200 dark:border-white/5 transition-colors duration-200">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
@@ -74,7 +74,7 @@ export default function Navbar() {
               {isGuest && !user && (
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary-600 text-white hover:bg-primary-500 shadow-md dark:shadow-sm hover:shadow-lg transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -155,7 +155,7 @@ export default function Navbar() {
       {/* Mobile Menu Drawer */}
       {user && (
         <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 border-t border-gray-100 dark:border-gray-800' : 'max-h-0'}`}>
-          <div className="px-4 pt-2 pb-6 space-y-1 bg-white dark:bg-gray-900">
+          <div className="px-4 pt-2 pb-6 space-y-1 bg-white dark:bg-gray-800">
             <div className="flex items-center px-3 py-4 border-b border-gray-50 dark:border-gray-800 mb-2">
               <div className="flex-1">
                 <p className="text-base font-bold text-gray-900 dark:text-white">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client';
 
-const FRONTEND_VERSION = '1.3.0';
+const FRONTEND_VERSION = '1.3.1';
 
 export default function Footer() {
   const [backendVersion, setBackendVersion] = useState('...');
@@ -20,7 +20,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 transition-colors duration-200">
+    <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 transition-colors duration-200">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between h-auto py-2 sm:h-10 gap-2">
           <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5 order-2 sm:order-1">

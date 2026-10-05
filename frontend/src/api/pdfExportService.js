@@ -5,12 +5,12 @@ import 'jspdf-autotable';
  * Helper to convert color hex to RGB array
  */
 const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '#3b82f6');
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '#4f7cff');
   return result ? [
     parseInt(result[1], 16),
     parseInt(result[2], 16),
     parseInt(result[3], 16)
-  ] : [59, 130, 246];
+  ] : [79, 124, 255];
 };
 
 /**
@@ -282,14 +282,14 @@ export const exportToPDF = async (events, selectedClubs, dateRange, viewType, th
     if (t === 'dark') {
       return {
         theme: 'dark',
-        background: [15, 23, 42],     // slate-900
-        surface: [30, 41, 59],        // slate-800
-        textPrimary: [255, 255, 255],
-        textSecondary: [148, 163, 184],
-        border: [51, 65, 85],         // slate-700
-        tableBody: [15, 23, 42],
-        tableAlt: [17, 24, 39],
-        tableText: [203, 213, 225]
+        background: [7, 10, 18],      // gray-950
+        surface: [11, 15, 24],        // gray-900
+        textPrimary: [245, 247, 250], // gray-50
+        textSecondary: [139, 149, 167], // gray-400
+        border: [28, 37, 54],         // gray-600
+        tableBody: [7, 10, 18],
+        tableAlt: [11, 15, 24],
+        tableText: [245, 247, 250]
       };
     }
     return {
@@ -368,8 +368,8 @@ export const exportToPDF = async (events, selectedClubs, dateRange, viewType, th
     body: tableRows,
     theme: 'grid',
     headStyles: { 
-      fillColor: themeColors.theme === 'dark' ? [30, 41, 59] : [51, 65, 85], 
-      textColor: [255, 255, 255] 
+      fillColor: themeColors.theme === 'dark' ? [11, 15, 24] : [51, 65, 85], 
+      textColor: themeColors.theme === 'dark' ? [245, 247, 250] : [255, 255, 255] 
     },
     bodyStyles: { 
       fillColor: themeColors.tableBody, 

@@ -6,7 +6,7 @@ export default function ThemeToggle({ className = '' }) {
   return (
     <button
       onClick={toggleTheme}
-      className={`p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 ${className}`}
+      className={`p-2 rounded-lg bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 dark:border dark:border-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 ${className}`}
       aria-label="Toggle Dark Mode"
     >
       {theme === 'dark' ? (

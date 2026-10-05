@@ -47,12 +47,12 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
       <Navbar />
       
       <div className="max-w-3xl mx-auto p-8">
           <div className="space-y-6">
-            <section className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transition-colors duration-200">
+            <section className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl border border-transparent dark:border-white/5 rounded-2xl shadow-xl p-8 transition-colors duration-200">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Notification Settings</h1>
 
               {message && (
@@ -90,7 +90,7 @@ export default function Settings() {
                       <input
                         type="time"
                         required={formData.notification_enabled}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white transition-colors"
                         value={formData.notification_time}
                         onChange={(e) => setFormData({ ...formData, notification_time: e.target.value })}
                       />
@@ -104,7 +104,7 @@ export default function Settings() {
                         Timezone
                       </label>
                       <select
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white transition-colors"
                         value={formData.timezone}
                         onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
                       >
@@ -119,7 +119,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:shadow-none"
+                  className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-500 shadow-md dark:shadow-sm hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:shadow-none"
                 >
                   {loading ? 'Saving...' : 'Save Settings'}
                 </button>
@@ -135,7 +135,7 @@ export default function Settings() {
               </div>
             </section>
 
-            <section className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transition-colors duration-200">
+            <section className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl border border-transparent dark:border-white/5 rounded-2xl shadow-xl p-8 transition-colors duration-200">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Calendar Preferences</h2>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
