@@ -1,9 +1,10 @@
 import uuid
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.core.cache import cache
 from clubs.models import Club
-
-
 class Event(models.Model):
     """
     Event model with full datetime support and location
@@ -62,3 +63,13 @@ class DeletedEventLog(models.Model):
         
     def __str__(self):
         return f"Deleted: {self.title} ({self.club_name})"
+
+
+@receiver([post_save, post_delete], sender=Event)
+def invalidate_event_cache(sender, instance, **kwargs):
+    cache.set('events_cache_version', str(uuid.uuid4()), timeout=None)
+
+
+@receiver([post_save, post_delete], sender=DeletedEventLog)
+def invalidate_deleted_event_cache(sender, instance, **kwargs):
+    cache.set('events_cache_version', str(uuid.uuid4()), timeout=None)

@@ -92,6 +92,19 @@ DATABASES = {
     }
 }
 
+# Redis Caching
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://localhost:6380/0'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,  # Fallback to DB if Redis is down
+        },
+        'TIMEOUT': 3600,  # Default 1 hour
+    }
+}
+
 # Auth
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -115,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 PASSWORD_RESET_TIMEOUT = 900  # 15 minutes
 
 # Application Version
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'

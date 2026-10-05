@@ -33,6 +33,42 @@ class EventViewSet(viewsets.ModelViewSet):
         # Re-serialize with the full read serializer so id/club are included
         output = EventSerializer(serializer.instance, context=self.get_serializer_context())
         return Response(output.data, status=status.HTTP_201_CREATED)
+        
+    def list(self, request, *args, **kwargs):
+        """
+        List events with Redis caching to optimize read-heavy endpoints.
+        """
+        from django.core.cache import cache
+        import uuid
+        import hashlib
+        
+        # Get query parameters to form cache key
+        start_param = request.query_params.get('start', '')
+        end_param = request.query_params.get('end', '')
+        clubs_param = request.query_params.get('clubs', '')
+        page_param = request.query_params.get('page', '1')
+        
+        # Get current events cache version to handle global invalidation gracefully
+        version = cache.get('events_cache_version')
+        if not version:
+            version = str(uuid.uuid4())
+            cache.set('events_cache_version', version, timeout=None)
+            
+        # Hash the parameters to keep the cache key short and safe
+        key_raw = f"{version}_{start_param}_{end_param}_{clubs_param}_{page_param}"
+        key_hash = hashlib.md5(key_raw.encode('utf-8')).hexdigest()
+        cache_key = f"events_list_{key_hash}"
+        
+        cached_data = cache.get(cache_key)
+        if cached_data is not None:
+            return Response(cached_data)
+            
+        # Fetch from DB if not in cache
+        response = super().list(request, *args, **kwargs)
+        
+        # Cache the serialized response data
+        cache.set(cache_key, response.data, timeout=3600)  # Cache for 1 hour
+        return response
     
     def get_queryset(self):
         """
