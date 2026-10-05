@@ -29,11 +29,12 @@ api.interceptors.response.use(
     const refreshUrl = '/api/auth/token/refresh/';
     if (error.response?.status === 401 && originalRequest.url === refreshUrl) {
       // Refresh failed, meaning refresh token is expired or invalid
+      const isGuest = sessionStorage.getItem('guestMode') === 'true';
       const publicPaths = ['/login', '/signup', '/forgot-password'];
       const isPublicPath = publicPaths.includes(window.location.pathname) || 
                           window.location.pathname.startsWith('/reset-password/');
       
-      if (!isPublicPath) {
+      if (!isPublicPath && !isGuest) {
         window.location.href = '/login';
       }
       return Promise.reject(error);
@@ -45,8 +46,9 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Try to refresh the token on any subsequent 401
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Try to refresh the token on any subsequent 401 — but NOT in guest mode
+    const isGuestForRefresh = sessionStorage.getItem('guestMode') === 'true';
+    if (error.response?.status === 401 && !originalRequest._retry && !isGuestForRefresh) {
       originalRequest._retry = true;
 
       try {
@@ -57,12 +59,13 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         // Refresh failed — clear local state and redirect to login
-        // EXCLUSION: Don't redirect if we are on login, signup, or password reset pages
+        // EXCLUSION: Don't redirect if we are on login, signup, password reset, or in guest mode
+        const isGuest = sessionStorage.getItem('guestMode') === 'true';
         const publicPaths = ['/login', '/signup', '/forgot-password'];
         const isPublicPath = publicPaths.includes(window.location.pathname) || 
                             window.location.pathname.startsWith('/reset-password/');
         
-        if (!isPublicPath) {
+        if (!isPublicPath && !isGuest) {
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);

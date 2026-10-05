@@ -15,7 +15,7 @@ class EventViewSet(viewsets.ModelViewSet):
     ViewSet for Event CRUD operations with club-based permissions.
     """
     queryset = Event.objects.select_related('club', 'created_by').prefetch_related('collaborating_clubs').all()
-    permission_classes = [permissions.IsAuthenticated, IsClubMemberOrReadOnly, IsSameClubMember]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsClubMemberOrReadOnly, IsSameClubMember]
     
     def get_serializer_class(self):
         if self.action == 'create':

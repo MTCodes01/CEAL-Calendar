@@ -6,7 +6,7 @@ import ThemeToggle from './ThemeToggle';
 import { getContrastColor } from '../utils/colorUtils';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isGuest } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -69,6 +69,19 @@ export default function Navbar() {
           <div className="flex items-center">
             <div className="flex items-center space-x-2 md:space-x-4">
               <ThemeToggle />
+
+              {/* Guest mode: show Login button */}
+              {isGuest && !user && (
+                <Link
+                  to="/login"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  Login
+                </Link>
+              )}
               
               {user && (
                 <>

@@ -16,9 +16,9 @@ import ResetPassword from './pages/ResetPassword';
 // Lazy load admin dashboard to prevent JS leakage to non-admins
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 
-// Protected route wrapper
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth();
+// Protected route wrapper -- allows authenticated users, and optionally guests
+function ProtectedRoute({ children, allowGuest = false }) {
+  const { isAuthenticated, isGuest, loading } = useAuth();
 
   if (loading) {
     return (
@@ -28,7 +28,9 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (isAuthenticated) return children;
+  if (allowGuest && isGuest) return children;
+  return <Navigate to="/login" />;
 }
 
 // Admin route wrapper
@@ -44,6 +46,14 @@ function AdminRoute({ children }) {
   }
 
   return isAuthenticated && user?.is_staff ? children : <Navigate to="/calendar" />;
+}
+
+// Root redirect: authenticated or guest -> /calendar, otherwise -> /login
+function RootRedirect() {
+  const { isAuthenticated, isGuest, loading } = useAuth();
+  if (loading) return null;
+  if (isAuthenticated || isGuest) return <Navigate to="/calendar" />;
+  return <Navigate to="/login" />;
 }
 
 function App() {
@@ -62,7 +72,7 @@ function App() {
                 <Route
                   path="/calendar"
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowGuest={true}>
                       <CalendarPage />
                     </ProtectedRoute>
                   }
@@ -97,7 +107,7 @@ function App() {
                     </AdminRoute>
                   }
                 />
-                <Route path="/" element={<Navigate to="/calendar" />} />
+                <Route path="/" element={<RootRedirect />} />
               </Routes>
               <Footer />
             </div>

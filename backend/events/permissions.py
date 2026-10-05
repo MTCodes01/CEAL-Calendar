@@ -9,9 +9,9 @@ class IsClubMemberOrReadOnly(permissions.BasePermission):
     Supports primary club, sub_club, and extra_clubs.
     """
     def has_permission(self, request, view):
-        # Read permissions for all authenticated users
+        # Read permissions for everyone, including unauthenticated (guest) users
         if request.method in permissions.SAFE_METHODS:
-            return request.user and request.user.is_authenticated
+            return True
         
         # Superusers always allowed
         if request.user and request.user.is_superuser:
@@ -38,9 +38,9 @@ class IsSameClubMember(permissions.BasePermission):
     - No Role: Read-only access.
     """
     def has_permission(self, request, view):
-        # Read permissions for all authenticated users
+        # Read permissions for everyone, including unauthenticated (guest) users
         if request.method in permissions.SAFE_METHODS:
-            return request.user and request.user.is_authenticated
+            return True
         
         # Super admin can do anything
         if request.user.is_superuser:
@@ -57,7 +57,7 @@ class IsSameClubMember(permissions.BasePermission):
         return True  # Handled by has_object_permission for PUT/PATCH/DELETE
 
     def has_object_permission(self, request, view, obj):
-        # Read permissions for all authenticated users
+        # Read permissions for everyone, including unauthenticated (guest) users
         if request.method in permissions.SAFE_METHODS:
             return True
         

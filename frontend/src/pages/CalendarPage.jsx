@@ -16,7 +16,7 @@ export default function CalendarPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isGuest } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
   const calendarRef = useRef(null);
@@ -24,18 +24,18 @@ export default function CalendarPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isGuest) {
       navigate('/login');
     } else {
       loadClubs();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isGuest]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated || isGuest) {
       loadEvents();
     }
-  }, [selectedClubs, isAuthenticated]);
+  }, [selectedClubs, isAuthenticated, isGuest]);
 
   const loadClubs = async () => {
     try {
@@ -362,17 +362,19 @@ export default function CalendarPage() {
               </div>
               
               <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                <button
-                  onClick={handleExportPDF}
-                  className="flex-1 sm:flex-none bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Export PDF
-                </button>
+                {!isGuest && (
+                  <button
+                    onClick={handleExportPDF}
+                    className="flex-1 sm:flex-none bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export PDF
+                  </button>
+                )}
 
-                {(user?.club || user?.sub_club || user?.extra_clubs?.length > 0) && (
+                {!isGuest && (user?.club || user?.sub_club || user?.extra_clubs?.length > 0) && (
                   <button
                     onClick={() => {
                       setSelectedEvent({ start: new Date(), end: new Date() });
@@ -386,6 +388,16 @@ export default function CalendarPage() {
                     Create Event
                   </button>
                 )}
+
+                {isGuest && (
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-medium">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Viewing as Guest
+                  </span>
+                )}
               </div>
             </div>
 
@@ -396,12 +408,12 @@ export default function CalendarPage() {
                 userColor={userColor}
                 timeFormat={user?.time_format || '12h'}
                 timezone={user?.timezone || 'Asia/Kolkata'}
-                selectable={canCreate}
+                selectable={!isGuest && canCreate}
                 onEventClick={handleEventClick}
-                onDateSelect={handleDateSelect}
+                onDateSelect={!isGuest ? handleDateSelect : undefined}
                 onDatesSet={loadEvents}
-                onEventDrop={handleEventDrop}
-                onEventResize={handleEventResize}
+                onEventDrop={!isGuest ? handleEventDrop : undefined}
+                onEventResize={!isGuest ? handleEventResize : undefined}
               />
 
             </div>
