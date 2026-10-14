@@ -81,7 +81,7 @@ function App() {
                   path="/settings"
                   element={
                     <ProtectedRoute>
-                      <Settings />
+                      <Navigate to="/profile?tab=settings" replace />
                     </ProtectedRoute>
                   }
                 />
@@ -97,13 +97,7 @@ function App() {
                   path="/admin"
                   element={
                     <AdminRoute>
-                      <Suspense fallback={
-                        <div className="min-h-screen flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                        </div>
-                      }>
-                        <AdminDashboard />
-                      </Suspense>
+                      <Navigate to="/profile?tab=admin" replace />
                     </AdminRoute>
                   }
                 />

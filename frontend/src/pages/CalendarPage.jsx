@@ -308,7 +308,7 @@ export default function CalendarPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
       <Navbar />
       
-      <div className="flex h-[calc(100vh-64px)] overflow-hidden relative">
+      <div className="flex h-[calc(100vh-64px)] md:h-screen overflow-hidden relative">
         {/* Sidebar Overlay for mobile */}
         {isSidebarOpen && (
           <div 
