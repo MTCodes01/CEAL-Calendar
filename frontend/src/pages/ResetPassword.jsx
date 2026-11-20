@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/client';
+import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function ResetPassword() {
   const { uid, token } = useParams();
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -53,10 +55,14 @@ export default function ResetPassword() {
       <div className="max-w-md w-full mx-auto">
         <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl shadow-sm p-7 sm:p-8 transition-colors">
           <div className="text-center mb-6">
-            <span className="font-['Pacifico',cursive] text-3xl text-slate-900 dark:text-white inline-block">
-              Calendar
-            </span>
-            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mt-3">
+            <Link to="/calendar" className="inline-block focus:outline-none mb-3">
+              <img 
+                src={theme === 'dark' ? '/CEAL%20Calendar%20-%20White%20-%20Full.svg' : '/CEAL%20Calendar%20-%20Black%20-%20Full.svg'} 
+                alt="CEAL Calendar Logo" 
+                className="h-9 sm:h-10 w-auto mx-auto object-contain"
+              />
+            </Link>
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
               Set new password
             </h1>
             <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1">

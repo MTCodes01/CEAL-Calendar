@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
+import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function ForgotPassword() {
@@ -8,6 +9,7 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
+  const { theme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +40,13 @@ export default function ForgotPassword() {
 
         <div className="max-w-md w-full mx-auto">
           <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl shadow-sm p-7 sm:p-8 text-center transition-colors">
+            <Link to="/calendar" className="inline-block focus:outline-none mb-5">
+              <img 
+                src={theme === 'dark' ? '/CEAL%20Calendar%20-%20White%20-%20Full.svg' : '/CEAL%20Calendar%20-%20Black%20-%20Full.svg'} 
+                alt="CEAL Calendar Logo" 
+                className="h-9 sm:h-10 w-auto mx-auto object-contain"
+              />
+            </Link>
             <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
@@ -70,10 +79,14 @@ export default function ForgotPassword() {
       <div className="max-w-md w-full mx-auto">
         <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl shadow-sm p-7 sm:p-8 transition-colors">
           <div className="text-center mb-6">
-            <span className="font-['Pacifico',cursive] text-3xl text-slate-900 dark:text-white inline-block">
-              Calendar
-            </span>
-            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mt-3">
+            <Link to="/calendar" className="inline-block focus:outline-none mb-3">
+              <img 
+                src={theme === 'dark' ? '/CEAL%20Calendar%20-%20White%20-%20Full.svg' : '/CEAL%20Calendar%20-%20Black%20-%20Full.svg'} 
+                alt="CEAL Calendar Logo" 
+                className="h-9 sm:h-10 w-auto mx-auto object-contain"
+              />
+            </Link>
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
               Reset password
             </h1>
             <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1">
