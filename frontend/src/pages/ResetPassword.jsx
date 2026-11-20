@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../api/client';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function ResetPassword() {
   const { uid, token } = useParams();
   const navigate = useNavigate();
-  
+
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ export default function ResetPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (password !== passwordConfirm) {
       setMessage({ type: 'error', text: 'Passwords do not match.' });
       return;
@@ -30,13 +30,14 @@ export default function ResetPassword() {
 
     try {
       await api.post(`/api/auth/password-reset/confirm/${uid}/${token}/`, { password });
-      setMessage({ type: 'success', text: 'Password reset successfully. You can now log in.' });
+      setMessage({ type: 'success', text: 'Password reset successfully. Redirecting to sign in...' });
       setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
       const errData = error.response?.data;
-      const errMsg = typeof errData === 'string'
-        ? errData
-        : (errData?.error || errData?.detail || 'Invalid or expired reset token.');
+      const errMsg =
+        typeof errData === 'string'
+          ? errData
+          : errData?.error || errData?.detail || 'Invalid or expired reset token.';
       setMessage({ type: 'error', text: errMsg });
     } finally {
       setLoading(false);
@@ -44,34 +45,43 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-transparent flex items-center justify-center p-4 transition-colors duration-200 relative">
+    <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative transition-colors">
       <div className="absolute top-4 right-4">
-        <ThemeToggle className="bg-white dark:bg-gray-800 shadow-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" />
+        <ThemeToggle />
       </div>
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            New Password
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Please enter your new password below.
-          </p>
-        </div>
 
-        {message && (
-          <div className={`rounded-lg px-4 py-3 text-sm font-medium mb-6 ${
-            message.type === 'success'
-              ? 'bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300'
-              : 'bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
-          }`}>
-            {message.text}
+      <div className="max-w-md w-full mx-auto">
+        <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl shadow-sm p-7 sm:p-8 transition-colors">
+          <div className="text-center mb-6">
+            <span className="font-['Pacifico',cursive] text-3xl text-slate-900 dark:text-white inline-block">
+              Calendar
+            </span>
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mt-3">
+              Set new password
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1">
+              Please enter your new password below
+            </p>
           </div>
-        )}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          {message && (
+            <div
+              className={`rounded-lg px-4 py-3 text-xs font-medium mb-5 border ${
+                message.type === 'success'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                  : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'
+              }`}
+            >
+              {message.text}
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-xs font-semibold text-slate-700 dark:text-neutral-300 mb-1.5"
+              >
                 New Password
               </label>
               <input
@@ -79,14 +89,18 @@ export default function ResetPassword() {
                 name="password"
                 type="password"
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                placeholder="New password"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-500 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                placeholder="At least 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="passwordConfirm" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label
+                htmlFor="passwordConfirm"
+                className="block text-xs font-semibold text-slate-700 dark:text-neutral-300 mb-1.5"
+              >
                 Confirm New Password
               </label>
               <input
@@ -94,22 +108,32 @@ export default function ResetPassword() {
                 name="passwordConfirm"
                 type="password"
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                placeholder="Confirm new password"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-500 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                placeholder="Repeat new password"
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
               />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 shadow-md transition-all duration-200 disabled:opacity-50"
-          >
-            {loading ? 'Saving...' : 'Reset password'}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium text-xs sm:text-sm shadow-xs transition-colors disabled:opacity-50 mt-2"
+            >
+              {loading ? 'Updating password...' : 'Update Password'}
+            </button>
+          </form>
+
+          <p className="text-xs text-slate-500 dark:text-neutral-400 text-center mt-6 font-normal">
+            Return to{' '}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

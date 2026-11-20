@@ -16,7 +16,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="md:hidden sticky top-0 z-50 bg-white/80 dark:bg-gray-900/50 backdrop-blur-xl shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.5)] border-b border-gray-200 dark:border-white/5 transition-colors duration-200">
+    <nav className="md:hidden sticky top-0 z-30 bg-white/95 dark:bg-neutral-900/95 border-b border-slate-200 dark:border-neutral-800 transition-colors">
       <div className="w-full px-3 sm:px-4">
         <div className="flex justify-between items-center h-16 gap-2">
           {/* Logo on the Left */}
@@ -38,7 +38,7 @@ export default function Navbar() {
             {isGuest && !user && (
               <Link
                 to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-primary-600 text-white hover:bg-primary-500 shadow-md transition-all duration-200"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 shadow-xs transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -54,43 +54,46 @@ export default function Navbar() {
                 <Link
                   to="/profile"
                   title="View Profile & Settings"
-                  className="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-200 group"
+                  className="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-neutral-800/60 transition-colors group"
                 >
                   {/* Username & Labels */}
                   <div className="flex flex-col items-end justify-center text-right max-w-[110px] sm:max-w-[150px]">
-                    <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white leading-tight truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {user.first_name} {user.last_name}
                     </span>
                     <div className="flex flex-wrap justify-end gap-1 mt-0.5">
                       {user.sub_club ? (
                         <span 
-                          className="text-[8px] sm:text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider whitespace-nowrap shadow-sm"
-                          style={{ backgroundColor: user.sub_club.color, color: getContrastColor(user.sub_club.color) }}
+                          className="text-[8px] font-semibold px-1.5 py-0.2 rounded border uppercase tracking-wider whitespace-nowrap"
+                          style={{ 
+                            backgroundColor: user.sub_club.color, 
+                            borderColor: user.sub_club.color,
+                            color: getContrastColor(user.sub_club.color) 
+                          }}
                         >
                           {user.sub_club.name}
                         </span>
                       ) : user.club ? (
                         <span 
-                          className="text-[8px] sm:text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider whitespace-nowrap shadow-sm"
-                          style={{ backgroundColor: user.club.color, color: getContrastColor(user.club.color) }}
+                          className="text-[8px] font-semibold px-1.5 py-0.2 rounded border uppercase tracking-wider whitespace-nowrap"
+                          style={{ 
+                            backgroundColor: user.club.color, 
+                            borderColor: user.club.color,
+                            color: getContrastColor(user.club.color) 
+                          }}
                         >
                           {user.club.name}
                         </span>
                       ) : user.is_superuser ? (
-                        <span className="text-[8px] sm:text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider whitespace-nowrap bg-purple-600 text-white">
+                        <span className="text-[8px] font-semibold px-1.5 py-0.2 rounded uppercase tracking-wider whitespace-nowrap bg-slate-900 text-white dark:bg-white dark:text-neutral-900">
                           Superadmin
                         </span>
                       ) : user.is_staff ? (
-                        <span className="text-[8px] sm:text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider whitespace-nowrap bg-blue-600 text-white">
+                        <span className="text-[8px] font-semibold px-1.5 py-0.2 rounded uppercase tracking-wider whitespace-nowrap bg-blue-700 text-white">
                           Admin
                         </span>
                       ) : null}
                     </div>
-                  </div>
-
-                  {/* Profile Circle Avatar */}
-                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md border-2 border-white dark:border-gray-800 flex-shrink-0 group-hover:scale-105 transition-transform">
-                    {user.first_name?.[0]?.toUpperCase()}{user.last_name?.[0]?.toUpperCase()}
                   </div>
                 </Link>
 
@@ -98,10 +101,10 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  title="Logout"
-                  className="p-1.5 sm:p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 flex-shrink-0"
+                  title="Sign Out"
+                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg transition-colors flex-shrink-0"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
                 </button>

@@ -3,28 +3,32 @@ import { createContext, useContext, useState, useCallback } from 'react';
 const ToastContext = createContext(null);
 
 /**
- * Toast notification types with their corresponding styles.
+ * Toast notification types with their corresponding collegiate styles.
  */
 const TOAST_STYLES = {
   success: {
-    bg: 'bg-green-50 dark:bg-green-900/40 border-green-300 dark:border-green-700',
-    text: 'text-green-800 dark:text-green-200',
+    bg: 'bg-white dark:bg-neutral-900 border-emerald-500/30 dark:border-emerald-500/40',
+    badge: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
+    text: 'text-slate-800 dark:text-neutral-200',
     icon: '✓',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-900/40 border-red-300 dark:border-red-700',
-    text: 'text-red-800 dark:text-red-200',
+    bg: 'bg-white dark:bg-neutral-900 border-rose-500/30 dark:border-rose-500/40',
+    badge: 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800',
+    text: 'text-slate-800 dark:text-neutral-200',
     icon: '✕',
   },
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700',
-    text: 'text-blue-800 dark:text-blue-200',
+    bg: 'bg-white dark:bg-neutral-900 border-blue-500/30 dark:border-blue-500/40',
+    badge: 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800',
+    text: 'text-slate-800 dark:text-neutral-200',
     icon: 'ℹ',
   },
   warning: {
-    bg: 'bg-yellow-50 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-700',
-    text: 'text-yellow-800 dark:text-yellow-200',
-    icon: '⚠',
+    bg: 'bg-white dark:bg-neutral-900 border-amber-500/30 dark:border-amber-500/40',
+    badge: 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800',
+    text: 'text-slate-800 dark:text-neutral-200',
+    icon: '!',
   },
 };
 
@@ -68,14 +72,17 @@ export function ToastProvider({ children }) {
           return (
             <div
               key={t.id}
-              className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-lg border shadow-lg backdrop-blur-sm animate-slide-in ${style.bg}`}
+              className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-md animate-slide-in ${style.bg}`}
               role="alert"
             >
-              <span className={`text-lg font-bold ${style.text} flex-shrink-0`}>{style.icon}</span>
-              <p className={`text-sm font-medium ${style.text} flex-1`}>{t.message}</p>
+              <span className={`w-5 h-5 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${style.badge}`}>
+                {style.icon}
+              </span>
+              <p className={`text-xs sm:text-sm font-medium ${style.text} flex-1 leading-snug`}>{t.message}</p>
               <button
                 onClick={() => removeToast(t.id)}
-                className={`text-sm font-bold ${style.text} opacity-60 hover:opacity-100 flex-shrink-0`}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-neutral-200 flex-shrink-0 text-sm font-medium transition-colors"
+                aria-label="Dismiss toast"
               >
                 ×
               </button>

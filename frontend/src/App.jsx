@@ -22,8 +22,8 @@ function ProtectedRoute({ children, allowGuest = false }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-neutral-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -39,8 +39,8 @@ function AdminRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-neutral-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -63,46 +63,48 @@ function App() {
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
-            <div className="min-h-screen flex flex-col">
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
-                <Route
-                  path="/calendar"
-                  element={
-                    <ProtectedRoute allowGuest={true}>
-                      <CalendarPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <ProtectedRoute>
-                      <Navigate to="/profile?tab=settings" replace />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <AdminRoute>
-                      <Navigate to="/profile?tab=admin" replace />
-                    </AdminRoute>
-                  }
-                />
-                <Route path="/" element={<RootRedirect />} />
-              </Routes>
+            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-neutral-950 text-slate-900 dark:text-neutral-100">
+              <main className="flex-1 flex flex-col">
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+                  <Route
+                    path="/calendar"
+                    element={
+                      <ProtectedRoute allowGuest={true}>
+                        <CalendarPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute>
+                        <Navigate to="/profile?tab=settings" replace />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <AdminRoute>
+                        <Navigate to="/profile?tab=admin" replace />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route path="/" element={<RootRedirect />} />
+                </Routes>
+              </main>
               <Footer />
             </div>
             </AuthProvider>

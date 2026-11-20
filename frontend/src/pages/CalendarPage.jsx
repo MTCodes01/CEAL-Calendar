@@ -305,20 +305,20 @@ export default function CalendarPage() {
   const canCreate = !!(user?.club || user?.sub_club || user?.extra_clubs?.length > 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-200">
+    <div className="h-screen flex flex-col bg-white dark:bg-neutral-900 md:bg-slate-50 md:dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 transition-colors duration-150 overflow-hidden">
       <Navbar />
       
-      <div className="flex h-[calc(100vh-64px)] md:h-screen overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Sidebar Overlay for mobile */}
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-20 md:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity z-40 md:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
         <div className={`
-          fixed inset-y-0 left-0 z-30 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
+          fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:w-64 h-full flex flex-col flex-shrink-0 shadow-2xl md:shadow-none
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}>
           <ClubFilterSidebar
@@ -346,28 +346,32 @@ export default function CalendarPage() {
           />
         </div>
 
-        <div className="flex-1 p-2 sm:p-4 md:p-6 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-gray-50/50 dark:bg-transparent">
-          <div className="bg-white/90 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl shadow-xl dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] p-3 sm:p-6 transition-all duration-300 border border-white/20 dark:border-white/5 min-h-full flex flex-col relative">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex-1 overflow-y-auto bg-white dark:bg-neutral-900 md:bg-slate-50 md:dark:bg-neutral-950 custom-scrollbar min-h-0">
+          <div className="bg-white dark:bg-neutral-900 p-3 sm:p-6 md:shadow-xs md:border border-slate-200 dark:border-neutral-800 min-h-full flex flex-col relative transition-colors">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-5 pb-3 sm:pb-4 border-b border-slate-200/80 dark:border-neutral-800">
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setIsSidebarOpen(true)}
-                  className="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="md:hidden p-2 rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors shadow-xs"
+                  aria-label="Filter clubs"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                   </svg>
                 </button>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Event Calendar</h1>
+                <div>
+                  <h1 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Event Calendar</h1>
+                  <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5">Explore, schedule, and track campus club activities</p>
+                </div>
               </div>
               
-              <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
                 {!isGuest && (
                   <button
                     onClick={handleExportPDF}
-                    className="flex-1 sm:flex-none bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 sm:flex-none bg-white dark:bg-neutral-900 text-slate-700 dark:text-neutral-200 px-3.5 py-2 rounded-lg font-medium text-xs sm:text-sm border border-slate-200 dark:border-neutral-700 hover:bg-slate-50 dark:hover:bg-neutral-800 shadow-sm transition-colors flex items-center justify-center gap-2"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-slate-500 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Export PDF
@@ -380,28 +384,18 @@ export default function CalendarPage() {
                       setSelectedEvent({ start: new Date(), end: new Date() });
                       setShowEventModal(true);
                     }}
-                    className="flex-1 sm:flex-none bg-primary-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-xs sm:text-sm shadow-sm transition-colors flex items-center justify-center gap-2"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Create Event
                   </button>
                 )}
-
-                {isGuest && (
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-medium">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    Viewing as Guest
-                  </span>
-                )}
               </div>
             </div>
 
-            <div className="flex-1 min-h-[400px] bg-white/50 dark:bg-gray-900/30 rounded-xl overflow-y-auto p-1 sm:p-2 shadow-inner border border-gray-100 dark:border-white/5">
+            <div className="flex-1 min-h-0 bg-transparent md:bg-slate-50/50 dark:md:bg-neutral-950/40 rounded-none md:rounded-xl overflow-visible md:overflow-y-auto p-0 md:p-2 border-0 md:border border-slate-200/60 dark:border-neutral-800 md:custom-scrollbar">
               <Calendar
                 ref={calendarRef}
                 events={events}

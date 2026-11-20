@@ -63,6 +63,10 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         .calendar-header-datepicker-wrapper {
           width: auto !important;
         }
+        .react-datepicker-popper {
+          z-index: 50 !important;
+          padding-top: 6px !important;
+        }
         
         /* Force DatePicker month grid layout */
         .calendar-header-popup {
@@ -95,28 +99,29 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         @media (min-width: 768px) {
           .fc .fc-scrollgrid-section-header.fc-scrollgrid-section-sticky > * {
             top: 65px !important;
-            z-index: 30 !important;
+            z-index: 10 !important;
           }
           .fc .fc-scrollgrid-section-all-day.fc-scrollgrid-section-sticky > * {
             top: 102px !important; /* 65px custom header + approx 37px day header */
-            z-index: 30 !important;
+            z-index: 10 !important;
           }
         }
       `}</style>
       
       {/* Mobile Sticky Header (Hidden on Desktop) */}
-      <div className="flex md:hidden sticky top-0 z-40 bg-gray-50/95 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 p-3 mb-4 rounded-xl shadow-sm flex-col items-center gap-3 transition-colors">
+      <div className="flex md:hidden sticky top-0 z-10 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm border-b border-slate-200/80 dark:border-neutral-800/80 py-2.5 mb-2 flex-col items-center gap-2.5 transition-colors">
         
         {/* Row 1: < Title > */}
-        <div className="flex items-center justify-center gap-4 w-full">
+        <div className="flex items-center justify-center gap-3 w-full">
           <button 
             onClick={() => calendarRef.current?.getApi()?.prev()}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-300 transition-colors"
+            aria-label="Previous"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
           </button>
           
-          <div className="text-gray-900 dark:text-white flex items-center justify-center relative">
+          <div className="text-slate-900 dark:text-white flex items-center justify-center relative">
             <DatePicker
               selected={currentDate}
               onChange={(date) => {
@@ -128,9 +133,9 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
               wrapperClassName="calendar-header-datepicker-wrapper"
               calendarClassName="calendar-header-popup"
               customInput={
-                <button className="font-bold text-xl flex items-center gap-2 outline-none hover:opacity-80 transition-opacity">
+                <button className="font-bold text-lg flex items-center gap-1.5 outline-none hover:opacity-80 transition-opacity">
                   {currentDate.toLocaleString('default', { month: 'short', year: 'numeric' })}
-                  <svg className="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  <svg className="w-3.5 h-3.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
               }
             />
@@ -138,64 +143,72 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
 
           <button 
             onClick={() => calendarRef.current?.getApi()?.next()}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-300 transition-colors"
+            aria-label="Next"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
           </button>
         </div>
 
-        {/* Row 2: Today */}
-        <button 
-          onClick={() => calendarRef.current?.getApi()?.today()}
-          className="px-6 py-1.5 text-sm font-medium rounded-full bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/5 transition-all shadow-sm dark:shadow-none"
-        >
-          Today
-        </button>
+        {/* Row 2: Today & Views */}
+        <div className="flex items-center gap-2 w-full">
+          <button 
+            onClick={() => calendarRef.current?.getApi()?.today()}
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-200 border border-slate-200 dark:border-neutral-700 transition-colors shadow-xs flex-shrink-0"
+          >
+            Today
+          </button>
 
-        {/* Row 3: Views */}
-        <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm w-full max-w-[280px]">
-          {['dayGridMonth', 'timeGridWeek', 'timeGridDay'].map((view) => (
-            <button
-              key={view}
-              onClick={() => calendarRef.current?.getApi()?.changeView(view)}
-              className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 shadow-sm dark:shadow-none' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 dark:hover:bg-gray-800/50'}`}
-            >
-              {view === 'dayGridMonth' ? 'Month' : view === 'timeGridWeek' ? 'Week' : 'Day'}
-            </button>
-          ))}
+          <div className="flex flex-1 bg-slate-100 dark:bg-neutral-800 rounded-lg p-0.5 border border-slate-200 dark:border-neutral-700">
+            {['dayGridMonth', 'timeGridWeek', 'timeGridDay'].map((view) => (
+              <button
+                key={view}
+                onClick={() => calendarRef.current?.getApi()?.changeView(view)}
+                className={`flex-1 py-1.5 text-center text-xs font-semibold rounded-md transition-colors ${
+                  currentView === view 
+                    ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-xs' 
+                    : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                {view === 'dayGridMonth' ? 'Month' : view === 'timeGridWeek' ? 'Week' : 'Day'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Desktop Sticky Header (Hidden on Mobile) */}
-      <div className="hidden md:flex sticky top-0 z-40 bg-gray-50/95 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5 p-4 rounded-xl shadow-sm items-center justify-between gap-4 transition-colors">
+      <div className="hidden md:flex sticky top-0 z-20 bg-white dark:bg-neutral-900 border-b border-slate-200 dark:border-neutral-800 p-3 mb-2 rounded-xl shadow-xs items-center justify-between gap-4 transition-colors">
         
         {/* Left: Prev/Next/Today */}
         <div className="flex items-center gap-2">
-          <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm">
+          <div className="flex bg-slate-50 dark:bg-neutral-800/80 rounded-lg p-0.5 border border-slate-200 dark:border-neutral-700">
             <button 
               onClick={() => calendarRef.current?.getApi()?.prev()}
-              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300 transition-all"
+              className="p-1 px-2.5 rounded-md hover:bg-white dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-300 transition-colors"
+              aria-label="Previous month"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div className="w-px bg-gray-200 dark:bg-white/5 mx-1"></div>
+            <div className="w-px bg-slate-200 dark:bg-neutral-700 my-0.5 mx-0.5" />
             <button 
               onClick={() => calendarRef.current?.getApi()?.next()}
-              className="p-1.5 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300 transition-all"
+              className="p-1 px-2.5 rounded-md hover:bg-white dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-300 transition-colors"
+              aria-label="Next month"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
           <button 
             onClick={() => calendarRef.current?.getApi()?.today()}
-            className="px-4 py-1.5 text-sm font-medium rounded-lg bg-white dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/5 transition-all shadow-sm dark:shadow-none"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-700 text-slate-700 dark:text-neutral-200 border border-slate-200 dark:border-neutral-700 transition-colors shadow-xs"
           >
             Today
           </button>
         </div>
 
         {/* Center: Title / DatePicker */}
-        <div className="text-gray-900 dark:text-white flex items-center justify-center relative">
+        <div className="text-slate-900 dark:text-white flex items-center justify-center relative">
           <DatePicker
             selected={currentDate}
             onChange={(date) => {
@@ -207,21 +220,25 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
             wrapperClassName="calendar-header-datepicker-wrapper"
             calendarClassName="calendar-header-popup"
             customInput={
-              <button className="font-bold text-2xl flex items-center gap-2 outline-none hover:opacity-80 transition-opacity">
+              <button className="font-bold text-xl flex items-center gap-2 outline-none hover:opacity-80 transition-opacity">
                 {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                <svg className="w-5 h-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                <svg className="w-4 h-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
               </button>
             }
           />
         </div>
 
         {/* Right: Views */}
-        <div className="flex bg-white dark:bg-gray-900/50 rounded-lg p-1 border border-gray-200 dark:border-white/5 shadow-sm">
+        <div className="flex bg-slate-100 dark:bg-neutral-800 rounded-lg p-0.5 border border-slate-200 dark:border-neutral-700">
           {['dayGridMonth', 'timeGridWeek', 'timeGridDay'].map((view) => (
             <button
               key={view}
               onClick={() => calendarRef.current?.getApi()?.changeView(view)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${currentView === view ? 'bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 shadow-sm dark:shadow-none' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 dark:hover:bg-gray-800/50'}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${
+                currentView === view 
+                  ? 'bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-xs' 
+                  : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
             >
               {view === 'dayGridMonth' ? 'Month' : view === 'timeGridWeek' ? 'Week' : 'Day'}
             </button>
@@ -229,7 +246,7 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
         </div>
       </div>
 
-      <div className="mt-4 md:mt-0 pt-0 md:pt-4">
+      <div className="mt-1 md:mt-0 pt-0 md:pt-4">
         <FullCalendar
           ref={calendarRef}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, momentTimezonePlugin]}
@@ -373,8 +390,12 @@ const Calendar = forwardRef(({ events, userColor = '#3779e6', timeFormat = '12h'
             </div>
             <div className="font-semibold text-xs truncate mb-0.5" style={{ color: textColor }}>{eventInfo.event.title}</div>
             {eventInfo.event.extendedProps?.location && (
-              <div className="text-xs truncate mb-0.5" style={{ color: textColor, opacity: 0.85 }}>
-                📍 {eventInfo.event.extendedProps.location}
+              <div className="text-[11px] truncate mb-0.5 flex items-center gap-1" style={{ color: textColor, opacity: 0.85 }}>
+                <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>{eventInfo.event.extendedProps.location}</span>
               </div>
             )}
             {eventInfo.event.extendedProps?.description && (
